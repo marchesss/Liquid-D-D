@@ -1,144 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Liquid D&D</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", sans-serif;
-    background: radial-gradient(circle at top, #2a2d30, #0c0d0f);
-    color: #e5e7eb;
+    background: radial-gradient(circle at top, #1f2227, #0b0c0e);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    font-family: Inter, system-ui, sans-serif;
+    color: #e5e7eb;
 }
 
+/* ===== UI ===== */
+
 .screen {
+    width: 520px;
     text-align: center;
-    max-width: 440px;
-    width: 100%;
-    padding: 20px;
-    position: relative;
 }
 
 h1 {
-    font-size: 2.6em;
+    font-size: 2.8em;
+    letter-spacing: 4px;
     margin-bottom: 20px;
-    letter-spacing: 3px;
-    color: #f1f5f9;
-    text-shadow: 0 0 12px rgba(200,200,200,0.35);
-}
-
-h2 {
-    font-weight: 500;
+    text-shadow: 0 0 20px rgba(200,200,200,.35);
 }
 
 input {
-    width: 80%;
-    padding: 12px;
-    font-size: 1em;
-    border-radius: 10px;
+    width: 70%;
+    padding: 14px;
+    border-radius: 12px;
     border: 1px solid #3f3f46;
-    background: #111214;
-    color: #f9fafb;
-    margin-bottom: 15px;
+    background: #0f1114;
+    color: #fff;
     text-align: center;
-    outline: none;
 }
 
 button {
-    padding: 12px 26px;
-    font-size: 0.95em;
-    border-radius: 12px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #3f3f46, #6b7280);
-    color: #fff;
-    margin: 8px;
+    margin-top: 16px;
+    padding: 14px 28px;
+    border-radius: 14px;
     border: none;
-    box-shadow: 0 0 12px rgba(200,200,200,0.25);
+    cursor: pointer;
+    background: linear-gradient(135deg,#3f3f46,#6b7280);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(200,200,200,.35);
 }
 
-button:hover {
-    box-shadow: 0 0 18px rgba(220,220,220,0.45);
+/* ===== SCENE ===== */
+
+.scene {
+    position: relative;
+    width: 520px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 16px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #1a1c20 0px,
+            #1a1c20 40px,
+            #14161a 40px,
+            #14161a 80px
+        );
+    box-shadow: 0 0 40px rgba(200,200,200,.15);
 }
 
-.level {
-    opacity: 0.7;
-    font-size: 0.95em;
+/* floor */
+.floor {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(180deg,#24272c,#0e1013);
+    border-top: 2px solid #3f3f46;
 }
 
-/* DOORS */
-
-.doors {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 16px;
-    margin-top: 25px;
-}
+/* ===== DOORS ===== */
 
 .door {
-    background: linear-gradient(180deg, #1f2124, #0e0f11);
-    border-radius: 14px;
-    padding: 32px 0;
-    cursor: pointer;
-    font-weight: 600;
-    border: 1px solid #3f3f46;
-    position: relative;
-    overflow: hidden;
-    color: #e5e7eb;
+    position: absolute;
+    bottom: 56px;
+    width: 48px;
+    height: 76px;
+    background: linear-gradient(180deg,#2b2f36,#121418);
+    border-radius: 10px 10px 6px 6px;
+    border: 2px solid #6b7280;
     box-shadow:
-        inset 0 0 12px rgba(255,255,255,0.05),
-        0 0 14px rgba(180,180,180,0.15);
+        inset 0 0 12px rgba(255,255,255,.05),
+        0 0 18px rgba(200,200,200,.25);
+    cursor: pointer;
+    overflow: hidden;
 }
 
-.door:hover {
-    box-shadow:
-        inset 0 0 16px rgba(255,255,255,0.08),
-        0 0 22px rgba(200,200,200,0.35);
+.door::before {
+    content: "";
+    position: absolute;
+    top: -14px;
+    left: -8px;
+    width: 64px;
+    height: 22px;
+    background: #16181c;
+    border-radius: 16px 16px 0 0;
+}
+
+.door::after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 36px;
+    width: 6px;
+    height: 6px;
+    background: #d1d5db;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,255,255,.8);
 }
 
 .door.open {
-    background: #0b0c0e;
+    background: #07080a;
 }
 
-.door img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    animation: pop 0.4s ease-out;
+/* ===== MONSTER PNG ===== */
+
+.monster {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scale(0.6);
+    width: 80px;
+    animation: monsterIn .4s ease-out forwards;
 }
 
-@keyframes pop {
-    from { transform: scale(0.6); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+@keyframes monsterIn {
+    from { transform: translateX(-50%) scale(0.2); opacity: 0; }
+    to   { transform: translateX(-50%) scale(1); opacity: 1; }
 }
 
-/* PLAYER */
+/* ===== PLAYER PNG ===== */
 
 .player {
     position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 72px;
-    transition: left 0.6s cubic-bezier(.4,0,.2,1);
+    bottom: 56px;
+    left: 40px;
+    width: 36px;
+    transition: left .6s cubic-bezier(.4,0,.2,1);
     pointer-events: none;
-    filter: drop-shadow(0 0 12px rgba(200,200,200,0.35));
+    filter: drop-shadow(0 0 12px rgba(220,220,220,.6));
 }
 
-canvas {
-    display: none;
+/* ===== TORCH ===== */
+
+.torch {
+    position: absolute;
+    top: 60px;
+    width: 6px;
+    height: 26px;
+    background: #374151;
+}
+
+.torch::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: -8px;
+    width: 22px;
+    height: 22px;
+    background: radial-gradient(circle,#fde047,#f97316);
+    border-radius: 50%;
+    animation: flicker .3s infinite alternate;
+}
+
+@keyframes flicker {
+    from { opacity:.6 }
+    to { opacity:1 }
 }
 </style>
 </head>
 <body>
 
 <div id="app"></div>
-<canvas id="shareCanvas" width="600" height="350"></canvas>
 
 <script>
 const app = document.getElementById("app");
@@ -149,14 +195,11 @@ let maxLevels = 0;
 let correctDoor = 0;
 let locked = false;
 
-const monsterImage = "images/monster.png";
-const playerImage = "images/player.png";
-
 function startScreen() {
     app.innerHTML = `
         <div class="screen">
             <h1>Liquid D&D</h1>
-            <input id="nameInput" placeholder="Enter your nickname" />
+            <input id="name" placeholder="Enter your nickname">
             <br>
             <button onclick="startGame()">Start Adventure</button>
         </div>
@@ -164,39 +207,33 @@ function startScreen() {
 }
 
 function startGame() {
-    nickname = document.getElementById("nameInput")?.value.trim() || "Warrior";
+    nickname = document.getElementById("name").value || "Warrior";
     level = 1;
-    maxLevels = random(3, 7);
+    maxLevels = rand(3,7);
     nextLevel();
 }
 
 function nextLevel() {
+    if (level > maxLevels) return winScreen();
     locked = false;
 
-    if (level > maxLevels) {
-        winScreen();
-        return;
-    }
+    const doorsCount = rand(2,5);
+    correctDoor = rand(1,doorsCount);
 
-    const doorsCount = random(2, 5);
-    correctDoor = random(1, doorsCount);
-
-    let doorsHTML = "";
+    let doors = "";
     for (let i = 1; i <= doorsCount; i++) {
-        doorsHTML += `
-            <div class="door" id="door-${i}" onclick="chooseDoor(${i})">
-                Door ${i}
-            </div>`;
+        doors += `<div class="door" style="left:${100 + i*80}px" onclick="chooseDoor(${i})"></div>`;
     }
 
     app.innerHTML = `
-        <div class="screen">
-            <div class="level">Level ${level} of ${maxLevels}</div>
-            <h2>Choose the right door</h2>
+        <div class="scene">
+            <div class="torch" style="left:40px"></div>
+            <div class="torch" style="right:40px"></div>
 
-            <div class="doors">${doorsHTML}</div>
+            ${doors}
 
-            <img src="${playerImage}" id="player" class="player">
+            <img src="images/player.png" class="player" id="player">
+            <div class="floor"></div>
         </div>
     `;
 }
@@ -205,16 +242,12 @@ function chooseDoor(index) {
     if (locked) return;
     locked = true;
 
-    const door = document.getElementById(`door-${index}`);
+    const doors = document.querySelectorAll(".door");
+    const door = doors[index - 1];
     const player = document.getElementById("player");
 
-    const doorRect = door.getBoundingClientRect();
-    const screenRect = app.getBoundingClientRect();
-
-    const doorCenter =
-        doorRect.left - screenRect.left + doorRect.width / 2;
-
-    player.style.left = `${doorCenter}px`;
+    player.style.left =
+        door.offsetLeft + door.offsetWidth / 2 - player.offsetWidth / 2 + "px";
 
     setTimeout(() => {
         if (index === correctDoor) {
@@ -222,8 +255,8 @@ function chooseDoor(index) {
             nextLevel();
         } else {
             door.classList.add("open");
-            door.innerHTML = `<img src="${monsterImage}">`;
-            setTimeout(loseScreen, 1500);
+            door.innerHTML = `<img src="images/monster.png" class="monster">`;
+            setTimeout(loseScreen, 1400);
         }
     }, 600);
 }
@@ -240,42 +273,13 @@ function loseScreen() {
 function winScreen() {
     app.innerHTML = `
         <div class="screen">
-            <h2>Congratulations warrior,<br>you are the champion!</h2>
+            <h2>Congratulations ${nickname},<br>you are the champion!</h2>
             <button onclick="startGame()">Play again</button>
-            <button onclick="shareResult()">Share results</button>
         </div>
     `;
 }
 
-function shareResult() {
-    const canvas = document.getElementById("shareCanvas");
-    const ctx = canvas.getContext("2d");
-
-    ctx.fillStyle = "#0b0c0e";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#e5e7eb";
-    ctx.textAlign = "center";
-
-    ctx.font = "32px Inter";
-    ctx.fillText("Liquid D&D", 300, 70);
-
-    ctx.font = "24px Inter";
-    ctx.fillText(`Champion: ${nickname}`, 300, 150);
-
-    ctx.font = "18px Inter";
-    ctx.fillText(`Completed ${maxLevels} levels`, 300, 200);
-
-    ctx.font = "16px Inter";
-    ctx.fillText("Neon dungeon master", 300, 250);
-
-    const link = document.createElement("a");
-    link.download = "liquid_dd_champion.png";
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-function random(min, max) {
+function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
